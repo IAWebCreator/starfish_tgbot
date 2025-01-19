@@ -1,0 +1,81 @@
+
+Create a YAML with a concise and comprehensive summary of the codebase to serve as persistent memory for an LLM specialized in coding. Include both general and specific aspects to provide a big picture and detailed information.
+
+### General Aspects
+
+#### Project Overview and Purpose
+- **Core Functionality:** Describe the main purpose and problem the codebase solves.
+- **Target Audience:** Identify the users or stakeholders of the software.
+- **Key Features:** List the major functionalities provided by the codebase.
+- **High-Level Architecture:** Outline the overall structure and main components of the system.
+- **Technology Stack:** Enumerate the programming languages, frameworks, libraries, and databases used.
+- **Key Design Principles:** Specify any design principles or architectural patterns applied.
+- **Development Philosophy:** State the guiding development principles or methodologies.
+
+#### Data Flow and Key Entities
+- **Major Data Entities:** List and describe the core data objects and their relationships.
+- **Data Flow:** Explain the typical flow of data for common operations within the system.
+
+#### External Dependencies and Integrations
+- **External Services:** Identify external APIs, services, or databases the codebase depends on.
+- **Integration Points:** Describe how the codebase interacts with these external systems.
+
+### Specific Aspects
+
+#### Key Modules/Components
+- **Module1**
+  - **Purpose:** Define the responsibility of the module.
+  - **Key Classes/Functions:** List important classes and functions within the module.
+  - **Input/Output:** Describe the typical inputs and outputs handled by the module.
+- **Module2**
+  - **Purpose:** Define the responsibility of the module.
+  - **Key Classes/Functions:** List important classes and functions within the module.
+  - **Input/Output:** Describe the typical inputs and outputs handled by the module.
+- **Module3**
+  - **Purpose:** Define the responsibility of the module.
+  - **Key Classes/Functions:** List important classes and functions within the module.
+  - **Input/Output:** Describe the typical inputs and outputs handled by the module.
+- *(Add additional modules as necessary following the same structure.)*
+
+#### Important Data Structures and Algorithms
+- **Key Data Structures:** Highlight significant or custom data structures used.
+- **Important Algorithms:** Detail any non-trivial algorithms implemented.
+
+#### Coding Conventions and Style
+- **Language-Specific Conventions:** Mention any coding conventions or style guides followed.
+- **Naming Conventions:** Describe the naming practices for variables, functions, and classes.
+
+#### Error Handling and Logging
+- **General Approach:** Outline the strategy for error handling and logging.
+- **Key Error Codes/Types:** List common error codes or exception types and their meanings.
+
+#### Build, Test, and Deployment Processes
+- **Build Process:** Describe the build process and tools used.
+- **Testing Strategy:** Outline the testing approaches and frameworks employed.
+- **Deployment Process:** Explain the deployment process and environments used.
+
+#### Important Configuration
+- **Key Configuration Parameters:** Highlight essential configuration settings and their purposes.
+
+### Structuring for LLM
+
+- **Language:** Use clear and concise language; define technical terms as needed.
+- **Structure:** Organize information with hierarchical headings and subheadings.
+- **Formatting:** Utilize bullet points, lists, and clear code blocks for readability.
+- **Keywords:** Include relevant keywords for indexing and reference.
+- **Documentation Links:** Mention the existence of external documentation if applicable.
+
+### Process for Creating Summary
+
+1. **Understand the purpose and goals of the codebase.**
+2. **Identify key stakeholders and users.**
+3. **Explore the codebase structure and main components.**
+4. **Document core functionalities and features.**
+5. **Extract key information from the code, existing documentation, and architectural diagrams.**
+6. **Leverage existing documentation as a foundation.**
+
+---
+
+CODEBASE
+{{codebase}}
+END_CODEBASE

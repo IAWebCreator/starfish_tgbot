@@ -1,0 +1,168 @@
+-- ======================================
+-- 1. USERS TABLE
+-- ======================================
+CREATE TABLE users (
+    id                  SERIAL          PRIMARY KEY,
+    wallet_address      VARCHAR(100)    UNIQUE NOT NULL,
+    name                VARCHAR(100),
+    telegram_username   VARCHAR(100),
+    created_at          TIMESTAMP       DEFAULT NOW() NOT NULL,
+    updated_at          TIMESTAMP       DEFAULT NOW() NOT NULL
+);
+
+-- ======================================
+-- 2. BOTS TABLE
+-- ======================================
+CREATE TABLE bots (
+    id                  SERIAL          PRIMARY KEY,
+    bot_name            VARCHAR(100)    NOT NULL,
+    bot_type            VARCHAR(50)     NOT NULL,  -- e.g. 'dapp' or 'custom'
+    token_id            VARCHAR(200),              -- For external/custom bots only
+    created_at          TIMESTAMP       DEFAULT NOW() NOT NULL,
+    updated_at          TIMESTAMP       DEFAULT NOW() NOT NULL
+);
+
+-- ======================================
+-- 3. AGENTS TABLE
+-- ======================================
+CREATE TABLE agents (
+    id                  SERIAL          PRIMARY KEY,
+    user_id             INT             NOT NULL REFERENCES users(id),
+    bot_id              INT             NOT NULL REFERENCES bots(id),
+    name                VARCHAR(100),   -- e.g., "MyCryptoAgent"
+    description         TEXT,           -- Data from the first step (agent description)
+    instructions        TEXT,           -- Optional instructions
+    is_active           BOOLEAN         DEFAULT FALSE,
+    created_at          TIMESTAMP       DEFAULT NOW() NOT NULL,
+    updated_at          TIMESTAMP       DEFAULT NOW() NOT NULL
+);
+
+-- ======================================
+-- 4. PROMPTS TABLE
+-- ======================================
+CREATE TABLE prompts (
+    id                  SERIAL          PRIMARY KEY,
+    agent_id            INT             NOT NULL REFERENCES agents(id),
+    system_agent_prompt         TEXT            NOT NULL,
+    user_agent_prompt        TEXT,
+    created_at          TIMESTAMP       DEFAULT NOW() NOT NULL,
+    updated_at          TIMESTAMP       DEFAULT NOW() NOT NULL
+);
+
+-- ======================================
+-- 5. ACTIVATIONS TABLE
+-- ======================================
+CREATE TABLE activations (
+    id                      SERIAL          PRIMARY KEY,
+    agent_id                INT             NOT NULL REFERENCES agents(id),
+    transaction_id          VARCHAR(200),   -- On-chain transaction reference
+    verification_code       VARCHAR(50)     UNIQUE,  -- For first-time activation
+    verification_used_at    TIMESTAMP,
+
+    telegram_group_id       VARCHAR(100),
+    telegram_group_name     VARCHAR(200),
+    telegram_authorized_user VARCHAR(100),
+
+    activation_start        TIMESTAMP,
+    activation_end          TIMESTAMP,
+    duration_hours          INT,            -- 4, 12, or 24 hours
+
+    -- NEW COLUMN: Status Tracking
+    activation_status       VARCHAR(20)     NOT NULL DEFAULT 'pending',
+    -- Possible values: 'pending', 'active', 'expired', etc.
+
+    created_at              TIMESTAMP       DEFAULT NOW() NOT NULL,
+    updated_at              TIMESTAMP       DEFAULT NOW() NOT NULL,
+    selectedBotId           VARCHAR(10)     NOT NULL
+);
+
+-- ======================================
+-- 6. MESSAGES TABLE (NEW for Message Logging)
+-- ======================================
+CREATE TABLE messages (
+    id                  SERIAL          PRIMARY KEY,
+    activation_id       INT             NOT NULL REFERENCES activations(id),
+    message_from        VARCHAR(100)    NOT NULL, -- Could be 'user', 'agent', or a Telegram username
+    message_text        TEXT            NOT NULL,
+    message_answered    TEXT            NOT NULL,
+    created_at          TIMESTAMP       DEFAULT NOW() NOT NULL,
+    agent_id            INT             NOT NULL REFERENCES agents(id)
+);
+
+-- ======================================
+-- 7. prompts_generator TABLE (prompts for generating prompts)
+-- ======================================
+
+CREATE TABLE prompts_generator (
+    id                  SERIAL          PRIMARY KEY,
+    pre_system_prompt   TEXT            NOT NULL,
+    system_prompt       TEXT            NOT NULL,
+    user_prompt         TEXT            NOT NULL
+);
+
+
+--
+CREATE OR REPLACE FUNCTION create_activation_record(
+    p_agent_id         INT,
+    p_transaction_id   VARCHAR(200),
+    p_duration_hours   INT
+)
+RETURNS json
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_code               VARCHAR(50);
+    v_activation_id      INT;
+    v_telegram_username  VARCHAR(101);
+    v_selectedBotId      VARCHAR(10);  -- Will hold the first 10 chars of token_id
+BEGIN
+    -- 1. Generate a random verification code (8 chars)
+    v_code := substring(md5(random()::text) from 1 for 8);
+
+    -- 2. Retrieve the Telegram username for the user (related to this agent) and prepend '@'
+    SELECT CONCAT('@', u.telegram_username)
+    INTO v_telegram_username
+    FROM agents a
+    JOIN users u ON a.user_id = u.id
+    WHERE a.id = p_agent_id;
+
+    -- 3. Retrieve the first 10 characters of the bot's token_id
+    SELECT substring(b.token_id for 10)
+    INTO v_selectedBotId
+    FROM bots b
+    JOIN agents a ON b.id = a.bot_id
+    WHERE a.id = p_agent_id;
+
+    -- 4. Insert into the activations table (including the new selectedBotId column)
+    INSERT INTO activations (
+        agent_id,
+        transaction_id,
+        verification_code,
+        activation_status,
+        duration_hours,
+        telegram_authorized_user,
+        selectedBotId,
+        created_at,
+        updated_at
+    )
+    VALUES (
+        p_agent_id,
+        p_transaction_id,
+        v_code,
+        'pending',
+        p_duration_hours,
+        v_telegram_username,
+        v_selectedBotId,
+        NOW(),
+        NOW()
+    )
+    RETURNING id INTO v_activation_id;
+
+    -- 5. Return the activation details as JSON
+    RETURN json_build_object(
+        'out_activation_id', v_activation_id,
+        'out_verification_code', v_code,
+        'out_selectedBotId', v_selectedBotId
+    );
+END;
+$$;

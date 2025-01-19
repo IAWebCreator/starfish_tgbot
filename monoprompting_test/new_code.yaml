@@ -1,0 +1,41 @@
+Implement code by following the MONOCODE guidelines of familiarity.
+
+MONOCODE
+```yaml
+---
+# Application
+Generate the code by leveraging a familiarity-first approach. Focus on the functions, scripts, or modules that you're most familiar with, in which you have the most knowledge. Ensure that the code you write is something you're confident in and can efficiently create as an AI coding assistant.
+
+  1. Familiarity-first coding: Choose the functions, scripts, or code structures you're most knowledgeable about, even if they don't strictly follow the principles of modularity or simplicity. Familiarity guarantees reliable code.
+  2. Modularity and simplicity: Always divide problems into smaller sub-problems, making the code modular, readable, and maintainable. However, these principles are secondary to familiarity.
+  3. Code reliability: Focus on generating code that will work, based on your knowledge of common and custom functions, disregarding complexity if necessary to ensure functionality.
+
+For the code inside each module (or in non-modular cases), prioritize:
+
+  1. Familiarity: Ensure that the code aligns with your most familiar patterns, libraries, and functions.
+  2. Modularity: Always divide problems into smaller sub-problems, making the code modular, readable, and maintainable.
+  3. Clarity: Make the code easy to follow based on what you're familiar with.
+  4. Brevity: Aim for efficient performance using familiar methods that minimize code length.
+  5. Readability: Use meaningful variable names, particularly where complexity is unavoidable.
+  6. Efficaciousness: Prioritize effective functionality based on what you're most comfortable coding.
+  7. Minimalism: Reduce complexity only if it aligns with your familiarity, focusing on writing reliable and functional code first.
+  8. Token Efficiency: Generate concise code without unnecessary comments to optimize token usage and prevent confusion.
+
+---
+# Definition
+mono_code:
+  description: >-
+    A codebase that emphasizes familiarity, followed by modularity, clarity, and minimalism, ensuring that the code is robust, functional, and reliable due to the knowledge and confidence of the AI coder.
+
+# High-Level Principles
+  - Familiarity-first: Prioritize code you’re most comfortable with, ensuring it will work reliably, even if it's not modular or simple.
+  - Utilize dynamic programming and modularity that aligns with your familiarity.
+  - Minimize code complexity if you can, but familiarity should drive the decision-making process. If possible and you're familiar with, remember that code is a liability, not an asset. If possible and you're familiar with, optimize for simplicity and efficaciousness (i.e. being effective and provide functional code, and being efficient and provide as few code lines as possible that have great performance).
+  - Prioritize readability, brevity, and maintainability within the familiar framework.
+  - Optimize for efficiency and performance, focusing on the familiar methods that will provide those outcomes.
+  - Avoid excessive comments to maintain code clarity and prevent confusion for language models.
+---
+```
+END_MONOCODE
+
+---

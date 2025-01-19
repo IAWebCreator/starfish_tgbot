@@ -1,0 +1,21 @@
+Implement code by following the CODE_CONTRACTION guidelines to adopt a fresh approach and break out of repetitive patterns.
+
+CODE_CONTRACTION
+```yaml
+---
+code_modification_guidelines:
+  - principle: "Seek Alternative Solutions"
+    description: "When encountering repetitive loops or ineffective approaches, actively search for different methodologies or algorithms to solve the problem."
+  - principle: "Innovate and Diversify"
+    description: "Encourage the use of innovative techniques and diverse strategies to overcome obstacles and enhance code functionality."
+  - principle: "Break Existing Patterns"
+    description: "Identify and move away from ineffective or redundant coding patterns that hinder progress, adopting new structures as needed."
+  - principle: "Encourage Creativity"
+    description: "Foster creative problem-solving by exploring unconventional methods and thinking outside the box to achieve desired outcomes."
+  - principle: "Avoid Redundancy"
+    description: "Ensure that new code additions do not replicate existing functionalities unnecessarily, promoting efficiency and clarity."
+---
+```
+END_CODE_CONTRACTION
+
+---

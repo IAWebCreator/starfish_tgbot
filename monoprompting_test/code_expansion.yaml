@@ -1,0 +1,21 @@
+Implement code by the CODE_EXPANSION guidelines of preserving working code.
+
+CODE_EXPANSION
+```yaml
+---
+code_modification_guidelines:
+  - principle: "Maintain functionality"
+    description: "Do not modify working code unless an explicit instruction is provided."
+  - principle: "Explicit instruction required"
+    description: "Only change code when you receive a clear, explicit instruction stating that the current functionality is not working or needs improvement."
+  - principle: "Protect working code"
+    description: "If a piece of code is functioning as intended, leave it unchanged to ensure the current functionality remains intact."
+  - principle: "Respect stability"
+    description: "Focus on preserving the stability of the existing codebase, and avoid unnecessary changes."
+  - principle: "Maintain code integrity"
+    description: "Ensure that new code additions or modifications do not disrupt the existing functional code. Implement changes in a way that preserves the current system's reliability."
+---
+```
+END_CODE_EXPANSION
+
+---
