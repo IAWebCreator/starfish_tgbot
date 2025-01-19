@@ -3,7 +3,7 @@ services:
     name: telegram-supabase-bot
     env: node
     buildCommand: npm install && npm run build
-    startCommand: npm start
+    startCommand: node dist/index.js
     nodeVersion: 20.x
     envVars:
       - key: NODE_ENV

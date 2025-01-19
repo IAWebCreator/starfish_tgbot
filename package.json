@@ -6,7 +6,6 @@
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "watch": "tsc -w",
     "postinstall": "npm run build"
   },
   "dependencies": {
@@ -14,15 +13,13 @@
     "@supabase/supabase-js": "^2.39.0",
     "axios": "^1.7.9",
     "dotenv": "^16.3.1",
-    "telegraf": "^4.15.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.17.12",
-    "@types/pg": "^8.11.10",
+    "telegraf": "^4.15.0",
+    "typescript": "^5.3.2",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.2"
+    "@types/node": "^20.17.12",
+    "@types/pg": "^8.11.10"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "20.x"
   }
 }
