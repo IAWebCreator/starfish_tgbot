@@ -2,7 +2,8 @@ import { BotManagerService } from './services/botManagerService';
 import express from 'express';
 
 let botManager: BotManagerService;
-const PORT = process.env.PORT || 3000;
+// Convert PORT to number explicitly
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
 async function startBotSystem() {
     botManager = new BotManagerService();
@@ -18,8 +19,8 @@ async function startBotSystem() {
             res.send('Bot is running!');
         });
 
-        // Start express server
-        app.listen(PORT, () => {
+        // Start express server with explicit host binding
+        app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server is running on port ${PORT}`);
         });
 
