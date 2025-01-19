@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: telegram-supabase-bot
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    nodeVersion: 20.x
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_API_ID
+        sync: false
+      - key: TELEGRAM_API_HASH
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false 
