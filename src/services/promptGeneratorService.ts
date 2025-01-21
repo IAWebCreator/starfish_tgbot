@@ -11,9 +11,9 @@ const supabase = createClient(
 );
 
 const GEMINI_API = {
-    baseURL: 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent',
+    baseURL: 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-exp:generateContent',
     key: process.env.GEMINI_API_KEY,
-    model: 'gemini-1.5-flash'
+    model: 'gemini-2.0-flash-exp'
 };
 
 interface PromptGeneratorData {
@@ -65,7 +65,7 @@ export class PromptGeneratorService {
 
     private async makeGeminiRequest(prompt: string) {
         try {
-            console.log('Making Gemini API request with prompt:', prompt);
+            console.log('Making Gemini 2.0 API request with prompt:', prompt);
             const response = await axios.post(
                 `${GEMINI_API.baseURL}?key=${GEMINI_API.key}`,
                 {
@@ -77,7 +77,7 @@ export class PromptGeneratorService {
                     ],
                     generationConfig: {
                         temperature: 0.7,
-                        maxOutputTokens: 2000,
+                        maxOutputTokens: 8192,
                         topK: 1,
                         topP: 0.8,
                         candidateCount: 1
@@ -85,6 +85,18 @@ export class PromptGeneratorService {
                     safetySettings: [
                         {
                             category: "HARM_CATEGORY_HARASSMENT",
+                            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                        },
+                        {
+                            category: "HARM_CATEGORY_HATE_SPEECH",
+                            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                        },
+                        {
+                            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                        },
+                        {
+                            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
                             threshold: "BLOCK_MEDIUM_AND_ABOVE"
                         }
                     ]
