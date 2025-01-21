@@ -19,7 +19,8 @@
     "ts-node": "^10.9.1",
     "@types/node": "^20.17.12",
     "@types/express": "^4.17.21",
-    "@types/pg": "^8.11.10"
+    "@types/pg": "^8.11.10",
+    "openai": "^4.28.0"
   },
   "engines": {
     "node": "20.x"

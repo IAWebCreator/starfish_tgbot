@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { OpenAI } from 'openai';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import { Context } from 'telegraf';
@@ -10,11 +10,11 @@ const supabase = createClient(
     process.env.SUPABASE_KEY!
 );
 
-const GEMINI_API = {
-    baseURL: 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent',
-    key: process.env.GEMINI_API_KEY,
-    model: 'gemini-pro'
-};
+// Initialize OpenAI client with Gemini configuration
+const openai = new OpenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+});
 
 interface PromptGeneratorData {
     pre_system_prompt: string;
@@ -65,65 +65,34 @@ export class PromptGeneratorService {
 
     private async makeGeminiRequest(prompt: string) {
         try {
-            console.log('Making Gemini Pro API request with prompt:', prompt);
-            const response = await axios.post(
-                `${GEMINI_API.baseURL}?key=${GEMINI_API.key}`,
-                {
-                    contents: [
-                        {
-                            role: "user",
-                            parts: [{ text: prompt }]
-                        }
-                    ],
-                    generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 2048,
-                        topK: 1,
-                        topP: 0.8,
-                        candidateCount: 1
-                    },
-                    safetySettings: [
-                        {
-                            category: "HARM_CATEGORY_HARASSMENT",
-                            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                        },
-                        {
-                            category: "HARM_CATEGORY_HATE_SPEECH",
-                            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                        },
-                        {
-                            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                        },
-                        {
-                            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                            threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                        }
-                    ]
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
+            console.log('Making Gemini 2.0 API request with prompt:', prompt);
+            
+            const response = await openai.chat.completions.create({
+                model: "gemini-1.5-flash",
+                messages: [
+                    {
+                        role: "user",
+                        content: prompt
                     }
-                }
-            );
+                ],
+                temperature: 0.7,
+                max_tokens: 8192,
+                top_p: 0.8,
+                n: 1
+            });
 
-            console.log('Raw API Response:', response.data);
+            console.log('Raw API Response:', response);
 
-            if (!response.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-                console.error('Invalid API response format:', response.data);
+            if (!response.choices?.[0]?.message?.content) {
+                console.error('Invalid API response format:', response);
                 throw new Error('Invalid API response format');
             }
 
-            return response.data.candidates[0].content.parts[0].text;
+            return response.choices[0].message.content;
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('API Error Details:', {
-                    status: error.response?.status,
-                    statusText: error.response?.statusText,
-                    data: error.response?.data,
-                    message: error.message
-                });
+            console.error('Error in makeGeminiRequest:', error);
+            if (error instanceof Error) {
+                throw new Error(`Gemini API Error: ${error.message}`);
             }
             throw error;
         }
