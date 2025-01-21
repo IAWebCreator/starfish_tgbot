@@ -11,9 +11,9 @@ const supabase = createClient(
 );
 
 const GEMINI_API = {
-    baseURL: 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-exp:generateContent',
+    baseURL: 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent',
     key: process.env.GEMINI_API_KEY,
-    model: 'gemini-2.0-flash-exp'
+    model: 'gemini-pro'
 };
 
 interface PromptGeneratorData {
@@ -65,7 +65,7 @@ export class PromptGeneratorService {
 
     private async makeGeminiRequest(prompt: string) {
         try {
-            console.log('Making Gemini 2.0 API request with prompt:', prompt);
+            console.log('Making Gemini Pro API request with prompt:', prompt);
             const response = await axios.post(
                 `${GEMINI_API.baseURL}?key=${GEMINI_API.key}`,
                 {
@@ -77,7 +77,7 @@ export class PromptGeneratorService {
                     ],
                     generationConfig: {
                         temperature: 0.7,
-                        maxOutputTokens: 8192,
+                        maxOutputTokens: 2048,
                         topK: 1,
                         topP: 0.8,
                         candidateCount: 1
@@ -122,9 +122,7 @@ export class PromptGeneratorService {
                     status: error.response?.status,
                     statusText: error.response?.statusText,
                     data: error.response?.data,
-                    url: error.config?.url,
-                    headers: error.config?.headers,
-                    requestData: error.config?.data
+                    message: error.message
                 });
             }
             throw error;
