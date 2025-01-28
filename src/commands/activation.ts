@@ -150,7 +150,9 @@ export function setupActivationCommand(
 
             // Check if activation is in progress for this specific bot
             if (state.inProgress) {
-                await ctx.reply('An activation process is already in progress for this bot. Please wait or start over with /activation.');
+                await ctx.reply(
+                    'An activation process is already in progress for this bot. Please wait or start over with /activation. Or close and reactivate the process with /restart'
+                );
                 return;
             }
 
@@ -605,6 +607,26 @@ export function setupActivationCommand(
                     console.error('Error deleting selection message:', error);
                 }
             }
+        }
+    });
+
+    // Add this new command handler
+    bot.command('restart', async (ctx) => {
+        if (ctx.chat?.type === 'private') {
+            await ctx.reply('This command can only be used in groups.');
+            return;
+        }
+
+        const groupId = ctx.chat.id.toString();
+        const state = await getActivationState(groupId);
+
+        if (state.inProgress) {
+            // Reset the activation state
+            state.inProgress = false;
+            cleanupActivation(groupId);
+            await ctx.reply('Activation process has been reset. You can now start a new activation with /activation');
+        } else {
+            await ctx.reply('No activation process is currently running. You can start one with /activation');
         }
     });
 } 
